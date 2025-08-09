@@ -2,43 +2,52 @@ name: Android CI
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Java 17 para evitar conflitos entre Kotlin (17) e Java (1.8)
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: 17
           cache: gradle
 
-      - name: Validate Gradle Wrapper
-        uses: gradle/actions/wrapper-validation@v3
-
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - name: Build Debug APK
-        uses: gradle/gradle-build-action@v3
+      # Instala uma versão de Gradle na VM (sem depender de wrapper no repo)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
         with:
-          arguments: assembleDebug --stacktrace
+          gradle-version: 8.7
 
-      - name: Upload APK artifact
-        if: always()
+      # Gera o Gradle Wrapper dentro do workspace
+      - name: Generate Gradle Wrapper
+        run: |
+          gradle wrapper --gradle-version 8.7
+          ./gradlew --version
+
+      # (Opcional) Mostrar estrutura para depuração rápida
+      - name: Show tree
+        run: |
+          ls -la
+          ls -la app || true
+          ls -la gradle/wrapper || true
+
+      # Compila APK de debug
+      - name: Build Debug APK
+        run: |
+          ./gradlew assembleDebug --stacktrace
+
+      # Faz upload do APK gerado
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: warn
-          retention-days: 7
+          name: app-debug
+          path: |
+            app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
