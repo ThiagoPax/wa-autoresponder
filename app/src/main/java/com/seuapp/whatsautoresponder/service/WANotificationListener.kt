@@ -1,65 +1,52 @@
 package com.seuapp.whatsautoresponder.service
 
+import android.content.ComponentName
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import android.app.Notification
-import android.os.Bundle
-import androidx.core.app.RemoteInput // use sempre a versão androidx
 
 class WANotificationListener : NotificationListenerService() {
 
-    companion object {
-        private const val TAG = "WAListener"
-        private val WA_PACKAGES = setOf(
-            "com.whatsapp",          // WhatsApp pessoal
-            "com.whatsapp.w4b"       // WhatsApp Business
-        )
-    }
-
     override fun onListenerConnected() {
         super.onListenerConnected()
-        Log.d(TAG, "Notification listener conectado com sucesso")
+        Log.d(TAG, "Listener conectado e ativo.")
+        // Aqui você pode sinalizar para a UI (via SharedPrefs/Broadcast) que o serviço está ativo
     }
 
     override fun onListenerDisconnected() {
         super.onListenerDisconnected()
-        Log.d(TAG, "Notification listener desconectado")
-    }
-
-    override fun onNotificationPosted(sbn: StatusBarNotification?) {
+        Log.w(TAG, "Listener desconectado pelo sistema. Solicitando rebind...")
+        // Pede para o sistema reconectar quando possível (Android 7.0+)
         try {
-            if (sbn == null) return
-
-            val pkg = sbn.packageName ?: return
-            if (!WA_PACKAGES.contains(pkg)) return
-
-            val notification = sbn.notification ?: return
-            val extras: Bundle = notification.extras ?: Bundle()
-
-            val title = extras.getString(Notification.EXTRA_TITLE) ?: ""
-            val text = extras.getCharSequence(Notification.EXTRA_TEXT)?.toString() ?: ""
-
-            Log.d(TAG, "Nova notificação do WhatsApp | de=$title | msg=$text")
-
-            // Se futuramente você quiser responder via notificação, lembre-se:
-            // - Encontre a ação "Responder" na notification.actions
-            // - Use androidx.core.app.RemoteInput para preencher a resposta
-            // Aqui não respondemos nada, só registramos/filtramos (evita crashes).
-        } catch (t: Throwable) {
-            Log.e(TAG, "Erro em onNotificationPosted", t)
+            requestRebind(ComponentName(this, WANotificationListener::class.java))
+        } catch (e: Exception) {
+            Log.e(TAG, "Falha ao solicitar rebind: ${e.message}", e)
         }
     }
 
-    override fun onNotificationRemoved(sbn: StatusBarNotification?) {
-        // Opcional: logar remoções
-        try {
-            if (sbn == null) return
-            val pkg = sbn.packageName ?: return
-            if (!WA_PACKAGES.contains(pkg)) return
-            Log.d(TAG, "Notificação do WhatsApp removida")
-        } catch (t: Throwable) {
-            Log.e(TAG, "Erro em onNotificationRemoved", t)
+    override fun onNotificationPosted(sbn: StatusBarNotification) {
+        // Disparado quando uma notificação é publicada/atualizada
+        val pkg = sbn.packageName ?: return
+
+        // Exemplo: monitora WhatsApp (com.whatsapp ou WhatsApp Business com.whatsapp.w4b)
+        if (pkg == "com.whatsapp" || pkg == "com.whatsapp.w4b") {
+            val extras = sbn.notification.extras
+            val title = extras.getCharSequence("android.title")?.toString() ?: ""
+            val text = extras.getCharSequence("android.text")?.toString() ?: ""
+
+            Log.d(TAG, "WhatsApp -> de: $title | msg: $text")
+
+            // TODO: coloque aqui a sua lógica de detecção de palavras-chave
+            // e eventual resposta automática (se desejar implementar reply).
         }
+    }
+
+    override fun onNotificationRemoved(sbn: StatusBarNotification) {
+        // Notificação removida
+        Log.d(TAG, "Notificação removida de: ${sbn.packageName}")
+    }
+
+    companion object {
+        private const val TAG = "WAListener"
     }
 }
