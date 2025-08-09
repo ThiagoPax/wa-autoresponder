@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Android 13+ precisa dessa permissão para mostrar notificações do seu app (opcional, mas recomendado) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.App">
 
-        <!-- Activity inicial -->
+        <!-- Activity principal -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -19,17 +22,16 @@
             </intent-filter>
         </activity>
 
-        <!-- Serviço de acesso a notificações -->
+        <!-- NotificationListenerService do app -->
         <service
-            android:name=".service.WANotificationListener"
+            android:name=".WANotificationListener"
             android:label="@string/app_name"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
-            android:exported="true">
+            android:exported="true"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
 
     </application>
-
 </manifest>
