@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- Android 13+ precisa dessa permissão para mostrar notificações do seu app (opcional, mas recomendado) -->
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
         android:allowBackup="true"
@@ -12,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App">
 
-        <!-- Activity principal -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -22,9 +19,9 @@
             </intent-filter>
         </activity>
 
-        <!-- NotificationListenerService do app -->
+        <!-- Serviço que escuta notificações e envia a resposta inline -->
         <service
-            android:name=".WANotificationListener"
+            android:name=".service.WANotificationListener"
             android:label="@string/app_name"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
