@@ -17,19 +17,29 @@ jobs:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
-          cache: 'gradle'
 
-      # Instala SDK do Android (plataforma e build-tools). Ajuste as versões se seu projeto pedir outras.
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
       - name: Install required SDK packages
         run: |
           sdkmanager --install "platform-tools" "platforms;android-34" "build-tools;34.0.0"
 
-      - name: Gradlew permission
-        run: chmod +x gradlew
+      # Instala Gradle via SDKMAN (não precisa do gradlew no repo)
+      - name: Install Gradle 8.7
+        run: |
+          curl -s "https://get.sdkman.io" | bash
+          source "$HOME/.sdkman/bin/sdkman-init.sh"
+          sdk install gradle 8.7
+          echo "$HOME/.sdkman/candidates/gradle/current/bin" >> $GITHUB_PATH
+          gradle -v
+
+      # Gera o wrapper para os próximos builds e para você usar localmente, se quiser
+      - name: Generate Gradle Wrapper
+        run: |
+          gradle wrapper --gradle-version 8.7
+          git status
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug --stacktrace
