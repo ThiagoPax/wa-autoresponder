@@ -44,7 +44,7 @@ class WANotificationListener : NotificationListenerService() {
     // Pares (keyword, DayKind) — todos normalizados (sem acento e minúsculo)
     private val DAY_KEYWORDS: List<Pair<String, DayKind>> = listOf(
         "segunda" to DayKind.SEG,
-        "terca" to DayKind.TER, "terça" to DayKind.TER, // "terça" é capturada após normalize
+        "terca" to DayKind.TER, "terça" to DayKind.TER,
         "quarta" to DayKind.QUA,
         "quinta" to DayKind.QUI,
         "sexta"  to DayKind.SEX,
@@ -58,10 +58,10 @@ class WANotificationListener : NotificationListenerService() {
     // - Domingo: 14:00..15:59
     private fun isTimeAllowedForDay(day: DayKind, hour: Int, minute: Int): Boolean {
         return when (day) {
-            DayKind.SEG -> hour in 11..13 // 11:00..13:59
-            DayKind.TER, DayKind.QUA, DayKind.QUI, DayKind.SEX -> hour in 18..21 // 18:00..21:59
-            DayKind.DOM -> hour in 14..15 // 14:00..15:59
-            DayKind.SAB -> false // sábado ignorado
+            DayKind.SEG -> hour in 11..13
+            DayKind.TER, DayKind.QUA, DayKind.QUI, DayKind.SEX -> hour in 18..21
+            DayKind.DOM -> hour in 14..15
+            DayKind.SAB -> false
         }
     }
 
@@ -216,7 +216,6 @@ class WANotificationListener : NotificationListenerService() {
     private fun detectDaysInText(textNorm: String): List<DayKind> {
         val found = mutableSetOf<DayKind>()
         for ((kw, day) in DAY_KEYWORDS) {
-            // usar kw já normalizada (lista contém variações)
             if (textNorm.contains(kw)) found += day
         }
         return found.toList()
@@ -269,8 +268,8 @@ class WANotificationListener : NotificationListenerService() {
             }
             RemoteInput.addResultsToIntent(riArray, intent, results)
 
-            val flags = if (Build.VERSION.SDK_INT >= 31) PendingIntent.FLAG_MUTABLE else 0
-            action.pendingIntent.send(this, 0, intent, null, null, null, flags)
+            // Envia o PendingIntent vindo do WhatsApp (sem flags/opções extras)
+            action.pendingIntent.send(this, 0, intent)
             true
         } catch (_: Throwable) {
             false
