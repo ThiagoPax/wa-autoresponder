@@ -6,7 +6,7 @@
     <color name="purple_700">#3700B3</color>
     <color name="teal_200">#03DAC5</color>
 
-    <!-- Cores usadas no layout com “visual WhatsApp” -->
+    <!-- Cores do visual "WhatsApp" -->
     <color name="bgDark">#121B22</color>          <!-- fundo principal -->
     <color name="cardDark">#1F2C34</color>        <!-- cartões/botões -->
     <color name="waGreen">#25D366</color>         <!-- acento/ação -->
@@ -15,10 +15,15 @@
     <color name="ripple">#33FFFFFF</color>        <!-- ripple (20% branco) -->
     <color name="toggleOff">#555555</color>       <!-- estado desligado -->
 
-    <!-- Ícone launcher background (referenciado em drawable/ic_launcher_background.xml) -->
+    <!-- Ícone launcher background -->
     <color name="ic_launcher_background">#121B22</color>
 
-    <!-- fallback comuns -->
+    <!-- *** NOVA COR QUE FALTAVA *** -->
+    <!-- Se quiser igual ao fundo, pode referenciar: -->
+    <color name="whatsapp_bg">@color/bgDark</color>
+    <!-- (alternativa direta: #111B21) -->
+
+    <!-- fallbacks -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
