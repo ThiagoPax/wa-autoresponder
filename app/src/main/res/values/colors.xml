@@ -1,10 +1,14 @@
 <resources>
-    <color name="bgDark">#121212</color>
-    <color name="cardDark">#1E1E1E</color>
-    <color name="textPrimary">#EDEDED</color>
-    <color name="textSecondary">#CFCFCF</color>
-    <color name="waGreen">#00A884</color>
-    <color name="toggleOn">#00A884</color>
-    <color name="toggleOff">#5A5A5A</color>
-    <color name="ripple">#33FFFFFF</color>
+    <!-- Necessárias pelo tema que o Gradle apontou como faltando -->
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+
+    <!-- Úteis no app (podem já existir; se existirem, mantenha as suas) -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="whatsapp_bg">#121B22</color>
+    <color name="whatsapp_card">#1F2C34</color>
+    <color name="whatsapp_accent">#25D366</color>
+    <color name="log_text">#E7F1EA</color>
 </resources>
