@@ -1,69 +1,115 @@
 package com.seuapp.whatsautoresponder.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Settings
+import android.widget.Button
+import android.widget.Switch
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.seuapp.whatsautoresponder.databinding.ActivityMainBinding
-import com.seuapp.whatsautoresponder.util.Prefs
+import com.seuapp.whatsautoresponder.R
 import com.seuapp.whatsautoresponder.util.LogBus
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.seuapp.whatsautoresponder.util.Prefs
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    private fun idOf(name: String): Int =
+        resources.getIdentifier(name, "id", packageName)
+
+    private lateinit var tvLog: TextView
+    private var swEnabled: Switch? = null
+    private var btnOpenSettings: Button? = null
+    private var btnRefresh: Button? = null
+    private var btnClear: Button? = null
+
+    private val logReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val line = intent.getStringExtra(LogBus.EXTRA_LINE) ?: return
+            appendLine(line)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        // Estado inicial
-        val enabled = Prefs.isEnabled(this)
-        renderEnabled(enabled)
-        binding.tvLog.text = Prefs.readLog(this)
+        runCatching {
+            setContentView(R.layout.activity_main)
 
-        // Botão ON/OFF grande
-        binding.btnPower.setOnClickListener {
-            val newVal = Prefs.toggleEnabled(this)
-            renderEnabled(newVal)
-            Prefs.appendLog(this, if (newVal) "Aplicativo LIGADO." else "Aplicativo DESLIGADO.")
-        }
+            // tenta achar cada view por nome; se faltar, não trava
+            tvLog = findViewById(idOf("tvLog")) ?: TextView(this).also { setContentView(it) }
 
-        // Abrir configurações do serviço de notificações
-        binding.btnOpenSettings.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-        }
+            swEnabled = findViewById(idOf("swEnabled"))
+            btnOpenSettings = findViewById(idOf("btnOpenSettings"))
+            btnRefresh = findViewById(idOf("btnRefresh"))
+            btnClear = findViewById(idOf("btnClear"))
 
-        // Atualizar log (puxa do SharedPreferences)
-        binding.btnRefresh.setOnClickListener {
-            binding.tvLog.text = Prefs.readLog(this)
-        }
+            // estado inicial
+            swEnabled?.isChecked = Prefs.isEnabled(this)
+            tvLog.text = Prefs.readLog(this)
 
-        // Limpar log
-        binding.btnClear.setOnClickListener {
-            Prefs.clearLog(this)
-            binding.tvLog.text = ""
-        }
-
-        // Assinar eventos de log em tempo real (LogBus)
-        lifecycleScope.launch {
-            LogBus.events.collectLatest { line ->
-                // acrescenta à tela sem regravar tudo
-                val cur = binding.tvLog.text?.toString().orEmpty()
-                binding.tvLog.text = if (cur.isEmpty()) line else "$cur\n$line"
+            // listeners seguros
+            swEnabled?.setOnCheckedChangeListener { _, checked ->
+                Prefs.setEnabled(this, checked)
+                appendLine(if (checked) "Auto-responder LIGADO pela interface"
+                           else "Auto-responder DESLIGADO pela interface")
             }
+
+            btnOpenSettings?.setOnClickListener {
+                runCatching {
+                    startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+                }.onFailure {
+                    Toast.makeText(this, "Não foi possível abrir as configurações.", Toast.LENGTH_LONG).show()
+                }
+            }
+
+            btnRefresh?.setOnClickListener {
+                tvLog.text = Prefs.readLog(this)
+            }
+
+            btnClear?.setOnClickListener {
+                Prefs.clearLog(this)
+                tvLog.text = ""
+                Toast.makeText(this, "Log limpo.", Toast.LENGTH_SHORT).show()
+            }
+
+            // Mostra o último crash (se houver) para diagnóstico
+            readCrashFile().takeIf { it.isNotBlank() }?.let {
+                appendLine("---- ÚLTIMO CRASH ----")
+                appendLine(it)
+                appendLine("----------------------")
+                runCatching { deleteFile("last_crash.txt") }
+            }
+
+        }.onFailure { e ->
+            // Se o layout/IDs não baterem, mostra fallback simples (não trava)
+            val tv = TextView(this).apply {
+                text = "Falha ao carregar a interface: ${e.message}\n" +
+                       "Use o botão de permissões de Notificação no próximo build."
+                setPadding(24, 24, 24, 24)
+            }
+            setContentView(tv)
         }
     }
 
-    private fun renderEnabled(enabled: Boolean) {
-        // Visual do botão
-        binding.btnPower.text = if (enabled) "ON" else "OFF"
-        binding.btnPower.isSelected = enabled
-
-        // Rótulo de status
-        binding.tvStatus.text = if (enabled) "Ativo" else "Inativo"
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(logReceiver, IntentFilter(LogBus.ACTION_LOG_UPDATED))
     }
+
+    override fun onPause() {
+        super.onPause()
+        runCatching { unregisterReceiver(logReceiver) }
+    }
+
+    private fun appendLine(line: String) {
+        tvLog.append(if (tvLog.text.isNullOrEmpty()) line else "\n$line")
+    }
+
+    private fun readCrashFile(): String = runCatching {
+        openFileInput("last_crash.txt").bufferedReader().use { it.readText() }
+    }.getOrElse { "" }
 }
