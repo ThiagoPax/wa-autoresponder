@@ -1,105 +1,69 @@
 package com.seuapp.whatsautoresponder.ui
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.provider.Settings
-import android.text.method.ScrollingMovementMethod
-import android.widget.Button
-import android.widget.Switch
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.seuapp.whatsautoresponder.R
-import com.seuapp.whatsautoresponder.util.LogHelper
+import androidx.lifecycle.lifecycleScope
+import com.seuapp.whatsautoresponder.databinding.ActivityMainBinding
+import com.seuapp.whatsautoresponder.util.Prefs
+import com.seuapp.whatsautoresponder.util.LogBus
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    companion object {
-        private const val PREFS = "auto_prefs"
-        private const val KEY_ENABLED = "enabled"
-        const val ACTION_LOG_UPDATED = "LOG_UPDATED"
-        const val EXTRA_LINE = "LINE"
-    }
+    private lateinit var binding: ActivityMainBinding
 
-    private fun prefs() = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-    private lateinit var tvLog: TextView
-    private lateinit var swEnabled: Switch
-    private lateinit var btnOpenSettings: Button
-    private lateinit var btnRefresh: Button
-    private lateinit var btnClear: Button
+        // Estado inicial
+        val enabled = Prefs.isEnabled(this)
+        renderEnabled(enabled)
+        binding.tvLog.text = Prefs.readLog(this)
 
-    private val logReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (intent.action == ACTION_LOG_UPDATED) {
-                val line = intent.getStringExtra(EXTRA_LINE) ?: return
-                tvLog.append("\n$line")
-                scrollLogToBottom()
+        // Botão ON/OFF grande
+        binding.btnPower.setOnClickListener {
+            val newVal = Prefs.toggleEnabled(this)
+            renderEnabled(newVal)
+            Prefs.appendLog(this, if (newVal) "Aplicativo LIGADO." else "Aplicativo DESLIGADO.")
+        }
+
+        // Abrir configurações do serviço de notificações
+        binding.btnOpenSettings.setOnClickListener {
+            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
+        }
+
+        // Atualizar log (puxa do SharedPreferences)
+        binding.btnRefresh.setOnClickListener {
+            binding.tvLog.text = Prefs.readLog(this)
+        }
+
+        // Limpar log
+        binding.btnClear.setOnClickListener {
+            Prefs.clearLog(this)
+            binding.tvLog.text = ""
+        }
+
+        // Assinar eventos de log em tempo real (LogBus)
+        lifecycleScope.launch {
+            LogBus.events.collectLatest { line ->
+                // acrescenta à tela sem regravar tudo
+                val cur = binding.tvLog.text?.toString().orEmpty()
+                binding.tvLog.text = if (cur.isEmpty()) line else "$cur\n$line"
             }
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    private fun renderEnabled(enabled: Boolean) {
+        // Visual do botão
+        binding.btnPower.text = if (enabled) "ON" else "OFF"
+        binding.btnPower.isSelected = enabled
 
-        tvLog = findViewById(R.id.tvLog)
-        swEnabled = findViewById(R.id.swEnabled)
-        btnOpenSettings = findViewById(R.id.btnOpenSettings)
-        btnRefresh = findViewById(R.id.btnRefresh)
-        btnClear = findViewById(R.id.btnClear)
-
-        tvLog.movementMethod = ScrollingMovementMethod()
-
-        // Inicializa UI
-        val enabled = prefs().getBoolean(KEY_ENABLED, true)
-        swEnabled.isChecked = enabled
-
-        swEnabled.setOnCheckedChangeListener { _, isChecked ->
-            prefs().edit().putBoolean(KEY_ENABLED, isChecked).apply()
-            val status = if (isChecked) "LIGADO" else "DESLIGADO"
-            LogHelper.write(this, "TOGGLE", "Auto-responder $status pela interface")
-            // Mostra imediatamente no log
-            refreshLog()
-        }
-
-        btnOpenSettings.setOnClickListener {
-            startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
-        }
-
-        btnRefresh.setOnClickListener { refreshLog() }
-        btnClear.setOnClickListener {
-            LogHelper.clear(this)
-            refreshLog()
-        }
-
-        refreshLog()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        LocalBroadcastManager.getInstance(this)
-            .registerReceiver(logReceiver, IntentFilter(ACTION_LOG_UPDATED))
-    }
-
-    override fun onStop() {
-        super.onStop()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(logReceiver)
-    }
-
-    private fun refreshLog() {
-        tvLog.text = LogHelper.readAll(this).ifBlank { "Sem eventos ainda." }
-        scrollLogToBottom()
-    }
-
-    private fun scrollLogToBottom() {
-        tvLog.post {
-            val layout = tvLog.layout ?: return@post
-            val scrollAmount = layout.getLineTop(tvLog.lineCount) - tvLog.height
-            if (scrollAmount > 0) tvLog.scrollTo(0, scrollAmount) else tvLog.scrollTo(0, 0)
-        }
+        // Rótulo de status
+        binding.tvStatus.text = if (enabled) "Ativo" else "Inativo"
     }
 }
