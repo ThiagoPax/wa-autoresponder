@@ -1,119 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/bgDark"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bgDark">
+    android:layout_height="match_parent">
 
-    <!-- Cabeçalho -->
+    <!-- Status -->
     <TextView
-        android:id="@+id/title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="WA AutoResponder"
-        android:textColor="@color/textPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Botão de permissão -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnPermissao"
-        style="@style/Widget.MaterialComponents.Button"
+        android:id="@+id/tvStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PERMITIR ACESSO A NOTIFICAÇÕES"
-        android:textAllCaps="true"
-        android:textColor="@color/bgDark"
-        app:cornerRadius="12dp"
-        app:backgroundTint="@color/waGreen"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:text="Inativo"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@color/textPrimary"
+        android:layout_marginBottom="12dp"/>
 
-    <!-- Botões do log -->
+    <!-- Ações superiores -->
     <LinearLayout
-        android:id="@+id/logActions"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/btnPermissao"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:weightSum="3"
+        android:layout_marginBottom="12dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnAtualizarLog"
-            style="@style/Widget.MaterialComponents.Button"
+        <Button
+            android:id="@+id/btnOpenSettings"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="ATUALIZAR LOG"
-            app:backgroundTint="@color/cardDark"/>
+            android:text="Permissões"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/cardDark"
+            android:textColor="@color/textPrimary"/>
 
-        <Space
-            android:layout_width="12dp"
-            android:layout_height="1dp"/>
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp"/>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLimparLog"
-            style="@style/Widget.MaterialComponents.Button"
+        <Button
+            android:id="@+id/btnRefresh"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:text="LIMPAR LOG"
-            app:backgroundTint="@color/cardDark"/>
+            android:text="Atualizar log"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/cardDark"
+            android:textColor="@color/textPrimary"/>
+
+        <View
+            android:layout_width="8dp"
+            android:layout_height="0dp"/>
+
+        <Button
+            android:id="@+id/btnClear"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:text="Limpar log"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/cardDark"
+            android:textColor="@color/textPrimary"/>
     </LinearLayout>
 
-    <!-- Área do log -->
+    <!-- Log -->
     <ScrollView
-        android:id="@+id/logScroll"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
-        app:layout_constraintTop_toBottomOf="@id/logActions"
-        app:layout_constraintBottom_toTopOf="@id/btnToggle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_weight="1"
+        android:fadeScrollbars="false">
 
         <TextView
-            android:id="@+id/txtLog"
+            android:id="@+id/tvLog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/textSecondary"
             android:textSize="14sp"
             android:lineSpacingExtra="2dp"
-            android:typeface="monospace"/>
+            android:textIsSelectable="true"
+            android:padding="8dp"
+            android:background="@color/cardDark"/>
     </ScrollView>
 
-    <!-- Botão redondo ON/OFF fixo ao rodapé -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnToggle"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+    <!-- Botão ON/OFF grande e redondo na parte baixa -->
+    <Button
+        android:id="@+id/btnPower"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:text="OFF"
-        android:textSize="24sp"
-        android:textStyle="bold"
         android:textAllCaps="false"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        android:stateListAnimator="@null"
-        app:cornerRadius="80dp"
-        app:rippleColor="@color/ripple"
-        app:backgroundTint="@color/toggleOff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="18dp"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="@color/textPrimary"
+        android:background="@drawable/bg_power_button"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"/>
+</LinearLayout>
