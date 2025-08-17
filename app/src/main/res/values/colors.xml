@@ -1,6 +1,10 @@
 <resources>
-    <color name="ic_launcher_background">#3DDC84</color>
-    <color name="purple_500">#6200EE</color>
-    <color name="purple_700">#3700B3</color>
-    <color name="teal_200">#03DAC5</color>
+    <color name="bgDark">#121212</color>
+    <color name="cardDark">#1E1E1E</color>
+    <color name="textPrimary">#EDEDED</color>
+    <color name="textSecondary">#CFCFCF</color>
+    <color name="waGreen">#00A884</color>
+    <color name="toggleOn">#00A884</color>
+    <color name="toggleOff">#5A5A5A</color>
+    <color name="ripple">#33FFFFFF</color>
 </resources>
