@@ -1,39 +1,30 @@
 package com.seuapp.whatsautoresponder.util
 
 import android.content.Context
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.seuapp.whatsautoresponder.ui.MainActivity
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import android.content.Intent
 
+/**
+ * Wrapper de compatibilidade para projetos antigos que usavam broadcast.
+ * Hoje o app usa Prefs + LogBus, mas mantemos ACTION/EXTRA para evitar erros.
+ */
 object LogHelper {
-    private const val FILE_NAME = "auto_log.txt"
-    private val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    const val ACTION_LOG_UPDATED = "com.seuapp.whatsautoresponder.LOG_UPDATED"
+    const val EXTRA_LINE = "line"
 
-    @Synchronized
-    fun write(context: Context, tag: String, msg: String) {
-        val line = "[${sdf.format(Date())}] $tag: $msg"
-        try {
-            File(context.filesDir, FILE_NAME).appendText(line + "\n")
-        } catch (_: Throwable) { /* ignore */ }
-
-        // Notifica UI
-        val intent = android.content.Intent(MainActivity.ACTION_LOG_UPDATED)
-            .putExtra(MainActivity.EXTRA_LINE, line)
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
+    fun append(ctx: Context, line: String) {
+        // grava no SharedPreferences
+        Prefs.appendLog(ctx, line)
+        // notifica a UI em tempo real
+        LogBus.emit(line)
+        // broadcast opcional (compatibilidade com receivers antigos)
+        ctx.sendBroadcast(Intent(ACTION_LOG_UPDATED).putExtra(EXTRA_LINE, line))
     }
 
-    @Synchronized
-    fun readAll(context: Context): String {
-        val f = File(context.filesDir, FILE_NAME)
-        return if (f.exists()) f.readText() else ""
+    fun clear(ctx: Context) {
+        Prefs.clearLog(ctx)
+        LogBus.emit("Log limpo.")
+        ctx.sendBroadcast(Intent(ACTION_LOG_UPDATED).putExtra(EXTRA_LINE, ""))
     }
 
-    @Synchronized
-    fun clear(context: Context) {
-        val f = File(context.filesDir, FILE_NAME)
-        if (f.exists()) f.writeText("")
-    }
+    fun read(ctx: Context): String = Prefs.readLog(ctx)
 }
