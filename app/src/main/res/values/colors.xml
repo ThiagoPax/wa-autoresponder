@@ -1,30 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- Paleta base (Material defaults usados por alguns temas) -->
     <color name="purple_500">#6200EE</color>
     <color name="purple_700">#3700B3</color>
     <color name="teal_200">#03DAC5</color>
 
-    <!-- Cores do visual "WhatsApp" -->
-    <color name="bgDark">#121B22</color>          <!-- fundo principal -->
-    <color name="cardDark">#1F2C34</color>        <!-- cartões/botões -->
-    <color name="waGreen">#25D366</color>         <!-- acento/ação -->
-    <color name="textPrimary">#E7F1EA</color>     <!-- texto principal -->
-    <color name="textSecondary">#B8C7BE</color>   <!-- texto secundário -->
-    <color name="ripple">#33FFFFFF</color>        <!-- ripple (20% branco) -->
-    <color name="toggleOff">#555555</color>       <!-- estado desligado -->
+    <color name="bgDark">#121B22</color>
+    <color name="cardDark">#1F2C34</color>
+    <color name="waGreen">#25D366</color>
+    <color name="textPrimary">#E7F1EA</color>
+    <color name="textSecondary">#B8C7BE</color>
+    <color name="ripple">#33FFFFFF</color>
+    <color name="toggleOff">#555555</color>
 
-    <!-- Ícone launcher background -->
     <color name="ic_launcher_background">#121B22</color>
-
-    <!-- *** NOVA COR QUE FALTAVA *** -->
-    <!-- Se quiser igual ao fundo, pode referenciar: -->
     <color name="whatsapp_bg">@color/bgDark</color>
-    <!-- (alternativa direta: #111B21) -->
 
-    <!-- fallbacks -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-
 </resources>
