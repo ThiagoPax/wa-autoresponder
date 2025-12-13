@@ -1,10 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/gradlew.bat b/gradlew.bat
-new file mode 100644
-index 0000000000000000000000000000000000000000..5eed7ee8452842305a18a4eb967442683808226a
---- /dev/null
-+++ b/gradlew.bat
-@@ -0,0 +1,94 @@
 +@rem
 +@rem Copyright 2015 the original author or authors.
 +@rem
@@ -99,6 +92,3 @@ index 0000000000000000000000000000000000000000..5eed7ee8452842305a18a4eb96744268
 +if "%OS%"=="Windows_NT" endlocal
 +
 +:omega
- 
-EOF
-)
