@@ -1,10 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/gradlew b/gradlew
-new file mode 100755
-index 0000000000000000000000000000000000000000..23d15a9367071145e9c79bb4ddf879d1fbe78b5d
---- /dev/null
-+++ b/gradlew
-@@ -0,0 +1,251 @@
 +#!/bin/sh
 +
 +#
@@ -256,6 +249,3 @@ index 0000000000000000000000000000000000000000..23d15a9367071145e9c79bb4ddf879d1
 +    )" '"$@"'
 +
 +exec "$JAVACMD" "$@"
- 
-EOF
-)
