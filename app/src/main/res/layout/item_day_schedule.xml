@@ -1,11 +1,5 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/app/src/main/res/layout/item_day_schedule.xml b/app/src/main/res/layout/item_day_schedule.xml
-new file mode 100644
-index 0000000000000000000000000000000000000000..78e6b7ebc95254ecee781f060c6b91f54163e901
---- /dev/null
-+++ b/app/src/main/res/layout/item_day_schedule.xml
-@@ -0,0 +1,42 @@
 +<?xml version="1.0" encoding="utf-8"?>
++<!-- Day schedule row layout rebuilt to avoid BOM/prolog issues -->
 +<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 +    android:layout_width="match_parent"
 +    android:layout_height="wrap_content"
@@ -47,6 +41,3 @@ index 0000000000000000000000000000000000000000..78e6b7ebc95254ecee781f060c6b91f5
 +        android:hint="Fim"
 +        android:inputType="time" />
 +</LinearLayout>
- 
-EOF
-)
