@@ -1,9 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/app/src/main/java/com/seuapp/whatsautoresponder/ui/MainActivity.kt b/app/src/main/java/com/seuapp/whatsautoresponder/ui/MainActivity.kt
-index bafaf99bc2596658df9425920eaaae3f9ff9beb0..0d684140018b3730001108fda7e1aff4eb34b014 100644
---- a/app/src/main/java/com/seuapp/whatsautoresponder/ui/MainActivity.kt
-+++ b/app/src/main/java/com/seuapp/whatsautoresponder/ui/MainActivity.kt
-@@ -1,115 +1,143 @@
  package com.seuapp.whatsautoresponder.ui
  
  import android.content.BroadcastReceiver
@@ -210,6 +204,3 @@ index bafaf99bc2596658df9425920eaaae3f9ff9beb0..0d684140018b3730001108fda7e1aff4
 -        openFileInput("last_crash.txt").bufferedReader().use { it.readText() }
 -    }.getOrElse { "" }
  }
- 
-EOF
-)
