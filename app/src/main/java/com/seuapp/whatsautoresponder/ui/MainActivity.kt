@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -14,13 +13,13 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.core.widget.doAfterTextChanged
 import com.seuapp.whatsautoresponder.R
 import com.seuapp.whatsautoresponder.util.LogBus
 import com.seuapp.whatsautoresponder.util.Prefs
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private data class DayConfig(val key: String, val label: String)
 
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         DayConfig("thu", "Quinta-feira"),
         DayConfig("fri", "Sexta-feira"),
         DayConfig("sat", "Sábado"),
-        DayConfig("sun", "Domingo")
+        DayConfig("sun", "Domingo"),
     )
 
     private lateinit var tvLog: TextView
@@ -66,15 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val filter = IntentFilter(LogBus.ACTION_LOG_UPDATED)
-
-        // Android 13+ exige declarar se o receiver é exported ou não (senão crash ao abrir).
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(logReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
-        } else {
-            @Suppress("DEPRECATION")
-            registerReceiver(logReceiver, filter)
-        }
+        registerReceiver(logReceiver, IntentFilter(LogBus.ACTION_LOG_UPDATED))
     }
 
     override fun onPause() {
@@ -86,7 +77,11 @@ class MainActivity : AppCompatActivity() {
         swEnabled.isChecked = Prefs.isEnabled(this)
         swEnabled.setOnCheckedChangeListener { _, checked ->
             Prefs.setEnabled(this, checked)
-            val line = if (checked) "App habilitado manualmente." else "App desabilitado manualmente."
+            val line = if (checked) {
+                "App habilitado manualmente."
+            } else {
+                "App desabilitado manualmente."
+            }
             Prefs.appendLog(this, line)
             LogBus.emit(line)
             tvLog.text = Prefs.readLog(this)
@@ -115,7 +110,6 @@ class MainActivity : AppCompatActivity() {
 
         dayConfigs.forEach { day ->
             val row = inflater.inflate(R.layout.item_day_schedule, scheduleContainer, false)
-
             val tvDayName = row.findViewById<TextView>(R.id.tvDayName)
             val swDayEnabled = row.findViewById<Switch>(R.id.swDayEnabled)
             val etStart = row.findViewById<EditText>(R.id.etStart)
