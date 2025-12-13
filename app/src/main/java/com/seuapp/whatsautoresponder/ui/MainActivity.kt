@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val filter = IntentFilter(LogBus.ACTION_LOG_UPDATED)
+
+        // Android 13+ exige declarar se o receiver é exported ou não (senão crash ao abrir).
         if (Build.VERSION.SDK_INT >= 33) {
             registerReceiver(logReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
         } else {
