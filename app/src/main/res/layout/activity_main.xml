@@ -1,172 +1,89 @@
- <?xml version="1.0" encoding="utf-8"?>
--<LinearLayout
--    xmlns:android="http://schemas.android.com/apk/res/android"
--    android:id="@+id/root"
--    android:orientation="vertical"
--    android:padding="16dp"
--    android:background="@color/bgDark"
-+<!-- Main UI layout rebuilt to avoid BOM/prolog issues -->
-+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="match_parent"
--    android:layout_height="match_parent">
-+    android:layout_height="match_parent"
-+    android:fillViewport="true"
-+    android:padding="16dp">
- 
--    <!-- Status -->
--    <TextView
--        android:id="@+id/tvStatus"
--        android:layout_width="wrap_content"
--        android:layout_height="wrap_content"
--        android:text="Inativo"
--        android:textStyle="bold"
--        android:textSize="18sp"
--        android:textColor="@color/textPrimary"
--        android:layout_marginBottom="12dp"/>
--
--    <!-- Ações superiores -->
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
--        android:orientation="horizontal"
--        android:weightSum="3"
--        android:layout_marginBottom="12dp">
-+        android:orientation="vertical">
- 
--        <Button
--            android:id="@+id/btnOpenSettings"
--            android:layout_width="0dp"
--            android:layout_height="48dp"
--            android:layout_weight="1"
--            android:text="Permissões"
--            android:textAllCaps="false"
--            android:backgroundTint="@color/cardDark"
--            android:textColor="@color/textPrimary"/>
-+        <TextView
-+            android:id="@+id/tvHeader"
-+            android:layout_width="wrap_content"
-+            android:layout_height="wrap_content"
-+            android:text="WA AutoResponder"
-+            android:textAppearance="@android:style/TextAppearance.Large"
-+            android:textStyle="bold" />
- 
--        <View
--            android:layout_width="8dp"
--            android:layout_height="0dp"/>
-+        <Switch
-+            android:id="@+id/swEnabled"
-+            android:layout_width="match_parent"
-+            android:layout_height="wrap_content"
-+            android:layout_marginTop="12dp"
-+            android:text="Ativar app" />
- 
--        <Button
--            android:id="@+id/btnRefresh"
--            android:layout_width="0dp"
--            android:layout_height="48dp"
--            android:layout_weight="1"
--            android:text="Atualizar log"
--            android:textAllCaps="false"
--            android:backgroundTint="@color/cardDark"
--            android:textColor="@color/textPrimary"/>
-+        <LinearLayout
-+            android:layout_width="match_parent"
-+            android:layout_height="wrap_content"
-+            android:layout_marginTop="12dp"
-+            android:gravity="center_vertical"
-+            android:orientation="horizontal">
- 
--        <View
--            android:layout_width="8dp"
--            android:layout_height="0dp"/>
-+            <Button
-+                android:id="@+id/btnOpenSettings"
-+                android:layout_width="0dp"
-+                android:layout_height="wrap_content"
-+                android:layout_weight="1"
-+                android:text="Abrir configurações do Notification Access" />
- 
--        <Button
--            android:id="@+id/btnClear"
--            android:layout_width="0dp"
--            android:layout_height="48dp"
--            android:layout_weight="1"
--            android:text="Limpar log"
--            android:textAllCaps="false"
--            android:backgroundTint="@color/cardDark"
--            android:textColor="@color/textPrimary"/>
--    </LinearLayout>
-+            <View
-+                android:layout_width="8dp"
-+                android:layout_height="0dp" />
- 
--    <!-- Log -->
--    <ScrollView
--        android:layout_width="match_parent"
--        android:layout_height="0dp"
--        android:layout_weight="1"
--        android:fadeScrollbars="false">
-+            <Button
-+                android:id="@+id/btnClear"
-+                android:layout_width="0dp"
-+                android:layout_height="wrap_content"
-+                android:layout_weight="1"
-+                android:text="Limpar log" />
-+        </LinearLayout>
-+
-+        <TextView
-+            android:id="@+id/tvScheduleTitle"
-+            android:layout_width="wrap_content"
-+            android:layout_height="wrap_content"
-+            android:layout_marginTop="16dp"
-+            android:text="Janelas de monitoramento"
-+            android:textStyle="bold" />
-+
-+        <LinearLayout
-+            android:id="@+id/scheduleContainer"
-+            android:layout_width="match_parent"
-+            android:layout_height="wrap_content"
-+            android:layout_marginTop="8dp"
-+            android:orientation="vertical" />
-+
-+        <TextView
-+            android:id="@+id/tvLogTitle"
-+            android:layout_width="wrap_content"
-+            android:layout_height="wrap_content"
-+            android:layout_marginTop="16dp"
-+            android:text="Log"
-+            android:textStyle="bold" />
- 
-         <TextView
-             android:id="@+id/tvLog"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
--            android:textColor="@color/textSecondary"
--            android:textSize="14sp"
--            android:lineSpacingExtra="2dp"
-+            android:layout_marginTop="8dp"
-+            android:background="@android:color/darker_gray"
-+            android:padding="12dp"
-             android:textIsSelectable="true"
--            android:padding="8dp"
--            android:background="@color/cardDark"/>
--    </ScrollView>
-+            android:textSize="14sp" />
- 
--    <!-- Botão ON/OFF grande e redondo na parte baixa -->
--    <Button
--        android:id="@+id/btnPower"
--        android:layout_width="200dp"
--        android:layout_height="200dp"
--        android:text="OFF"
--        android:textAllCaps="false"
--        android:textSize="28sp"
--        android:textStyle="bold"
--        android:textColor="@color/textPrimary"
--        android:background="@drawable/bg_power_button"
--        android:layout_gravity="center_horizontal"
--        android:layout_marginTop="16dp"
--        android:layout_marginBottom="8dp"/>
--</LinearLayout>
-+    </LinearLayout>
-+</ScrollView>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Main UI layout rebuilt to avoid BOM/prolog issues -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WA AutoResponder"
+            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textStyle="bold" />
+
+        <Switch
+            android:id="@+id/swEnabled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Ativar app" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnOpenSettings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Abrir configurações do Notification Access" />
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="0dp" />
+
+            <Button
+                android:id="@+id/btnClear"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Limpar log" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvScheduleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Janelas de monitoramento"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/scheduleContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/tvLogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Log"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"
+            android:padding="12dp"
+            android:textIsSelectable="true"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+</ScrollView>
