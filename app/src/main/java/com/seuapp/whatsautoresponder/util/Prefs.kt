@@ -1,9 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/app/src/main/java/com/seuapp/whatsautoresponder/util/Prefs.kt b/app/src/main/java/com/seuapp/whatsautoresponder/util/Prefs.kt
-index 956869699015e2920403e8d54ce5d67c81a31ad7..2aa29162c8cacca6eaa4d39c93a99e833ba095ea 100644
---- a/app/src/main/java/com/seuapp/whatsautoresponder/util/Prefs.kt
-+++ b/app/src/main/java/com/seuapp/whatsautoresponder/util/Prefs.kt
-@@ -1,42 +1,66 @@
  package com.seuapp.whatsautoresponder.util
  
  import android.content.Context
@@ -75,6 +69,3 @@ index 956869699015e2920403e8d54ce5d67c81a31ad7..2aa29162c8cacca6eaa4d39c93a99e83
 +        prefs(ctx).edit().putString("${KEY_DAY_PREFIX}${dayKey}_end", value).apply()
      }
  }
- 
-EOF
-)
