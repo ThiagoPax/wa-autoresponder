@@ -32,21 +32,18 @@ class WANotificationListener : NotificationListenerService() {
             Prefs.appendLog(this, "[WhatsApp] $title: $body")
             LogBus.emit("[WhatsApp] $title: $body")
 
-            val actions = runCatching {
-                sbn.notification?.actions ?: emptyArray()
-            }.getOrDefault(emptyArray())
+            val actions = runCatching { sbn.notification?.actions ?: emptyArray() }
+                .getOrDefault(emptyArray())
 
             val hasReply = actions.any {
-                runCatching {
-                    (it.title?.toString() ?: "").contains("responder", ignoreCase = true)
-                }.getOrDefault(false)
+                runCatching { (it.title?.toString() ?: "").contains("responder", ignoreCase = true) }
+                    .getOrDefault(false)
             }
 
             if (hasReply) {
                 Prefs.appendLog(this, "Ação de resposta disponível (apenas log).")
                 LogBus.emit("Ação de resposta disponível (apenas log).")
             }
-
         } catch (t: Throwable) {
             val msg =
                 "ERRO ao ler notificação: ${t::class.java.simpleName}: ${t.message ?: "sem mensagem"}"
@@ -84,6 +81,7 @@ class WANotificationListener : NotificationListenerService() {
                         .joinToString("\n") { it.toString() }
                     if (s.isNotBlank()) return s
                 }
+
                 is CharSequence -> {
                     val s = v.toString()
                     if (s.isNotBlank()) return s
