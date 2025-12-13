@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -65,7 +66,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(logReceiver, IntentFilter(LogBus.ACTION_LOG_UPDATED))
+        val filter = IntentFilter(LogBus.ACTION_LOG_UPDATED)
+        if (Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(logReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(logReceiver, filter)
+        }
     }
 
     override fun onPause() {
@@ -77,11 +84,7 @@ class MainActivity : AppCompatActivity() {
         swEnabled.isChecked = Prefs.isEnabled(this)
         swEnabled.setOnCheckedChangeListener { _, checked ->
             Prefs.setEnabled(this, checked)
-            val line = if (checked) {
-                "App habilitado manualmente."
-            } else {
-                "App desabilitado manualmente."
-            }
+            val line = if (checked) "App habilitado manualmente." else "App desabilitado manualmente."
             Prefs.appendLog(this, line)
             LogBus.emit(line)
             tvLog.text = Prefs.readLog(this)
@@ -93,11 +96,7 @@ class MainActivity : AppCompatActivity() {
             runCatching {
                 startActivity(Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS))
             }.onFailure {
-                Toast.makeText(
-                    this,
-                    "Não foi possível abrir as configurações.",
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(this, "Não foi possível abrir as configurações.", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -113,11 +112,7 @@ class MainActivity : AppCompatActivity() {
         scheduleContainer.removeAllViews()
 
         dayConfigs.forEach { day ->
-            val row = inflater.inflate(
-                R.layout.item_day_schedule,
-                scheduleContainer,
-                false
-            )
+            val row = inflater.inflate(R.layout.item_day_schedule, scheduleContainer, false)
 
             val tvDayName = row.findViewById<TextView>(R.id.tvDayName)
             val swDayEnabled = row.findViewById<Switch>(R.id.swDayEnabled)
@@ -134,19 +129,11 @@ class MainActivity : AppCompatActivity() {
             }
 
             etStart.doAfterTextChanged {
-                Prefs.setDayStart(
-                    this,
-                    day.key,
-                    it?.toString()?.trim().orEmpty()
-                )
+                Prefs.setDayStart(this, day.key, it?.toString()?.trim().orEmpty())
             }
 
             etEnd.doAfterTextChanged {
-                Prefs.setDayEnd(
-                    this,
-                    day.key,
-                    it?.toString()?.trim().orEmpty()
-                )
+                Prefs.setDayEnd(this, day.key, it?.toString()?.trim().orEmpty())
             }
 
             scheduleContainer.addView(row)
