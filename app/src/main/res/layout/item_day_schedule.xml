@@ -1,0 +1,52 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/app/src/main/res/layout/item_day_schedule.xml b/app/src/main/res/layout/item_day_schedule.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..78e6b7ebc95254ecee781f060c6b91f54163e901
+--- /dev/null
++++ b/app/src/main/res/layout/item_day_schedule.xml
+@@ -0,0 +1,42 @@
++<?xml version="1.0" encoding="utf-8"?>
++<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="match_parent"
++    android:layout_height="wrap_content"
++    android:orientation="horizontal"
++    android:gravity="center_vertical"
++    android:paddingVertical="4dp">
++
++    <TextView
++        android:id="@+id/tvDayName"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_weight="1"
++        android:text="Seg"
++        android:textStyle="bold" />
++
++    <Switch
++        android:id="@+id/swDayEnabled"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="" />
++
++    <EditText
++        android:id="@+id/etStart"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="8dp"
++        android:layout_weight="1"
++        android:ems="4"
++        android:hint="Início"
++        android:inputType="time" />
++
++    <EditText
++        android:id="@+id/etEnd"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginStart="8dp"
++        android:layout_weight="1"
++        android:ems="4"
++        android:hint="Fim"
++        android:inputType="time" />
++</LinearLayout>
+ 
+EOF
+)
