@@ -23,6 +23,7 @@ class WANotificationListener : NotificationListenerService() {
             if (pkg != "com.whatsapp") return
 
             val extras = sbn.notification?.extras
+
             val title = extractTitle(extras)
             val body = extractBestText(extras)
 
@@ -35,7 +36,7 @@ class WANotificationListener : NotificationListenerService() {
                 .getOrDefault(emptyArray())
 
             val hasReply = actions.any {
-                runCatching { (it.title?.toString() ?: "").contains("responder", ignoreCase = true) }
+                runCatching { (it.title?.toString() ?: "").contains("responder", true) }
                     .getOrDefault(false)
             }
 
@@ -74,16 +75,17 @@ class WANotificationListener : NotificationListenerService() {
         try {
             when (val v = extras?.get(Notification.EXTRA_TEXT_LINES)) {
                 is Array<*> -> {
-                    val s = v.filterIsInstance<CharSequence>().joinToString("\n") { it.toString() }
+                    val s = v.filterIsInstance<CharSequence>()
+                        .joinToString("\n") { it.toString() }
                     if (s.isNotBlank()) return s
                 }
+
                 is CharSequence -> {
                     val s = v.toString()
                     if (s.isNotBlank()) return s
                 }
             }
         } catch (_: Throwable) {
-            // ignora e tenta próximas fontes
         }
 
         extras.getCs(Notification.EXTRA_BIG_TEXT)?.let { if (it.isNotBlank()) return it }
