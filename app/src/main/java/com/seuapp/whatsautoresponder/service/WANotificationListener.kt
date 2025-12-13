@@ -23,7 +23,6 @@ class WANotificationListener : NotificationListenerService() {
             if (pkg != "com.whatsapp") return
 
             val extras = sbn.notification?.extras
-
             val title = extractTitle(extras)
             val body = extractBestText(extras)
 
@@ -44,9 +43,9 @@ class WANotificationListener : NotificationListenerService() {
                 Prefs.appendLog(this, "Ação de resposta disponível (apenas log).")
                 LogBus.emit("Ação de resposta disponível (apenas log).")
             }
+
         } catch (t: Throwable) {
-            val msg =
-                "ERRO ao ler notificação: ${t::class.java.simpleName}: ${t.message ?: "sem mensagem"}"
+            val msg = "ERRO ao ler notificação: ${t::class.java.simpleName}: ${t.message ?: "sem mensagem"}"
             Prefs.appendLog(this, msg)
             LogBus.emit(msg)
         }
@@ -57,8 +56,6 @@ class WANotificationListener : NotificationListenerService() {
         Prefs.appendLog(this, "Notificação removida.")
         LogBus.emit("Notificação removida.")
     }
-
-    // ===== Utilitários =====
 
     private fun Bundle?.getCs(key: String): String? =
         try {
@@ -77,11 +74,9 @@ class WANotificationListener : NotificationListenerService() {
         try {
             when (val v = extras?.get(Notification.EXTRA_TEXT_LINES)) {
                 is Array<*> -> {
-                    val s = v.filterIsInstance<CharSequence>()
-                        .joinToString("\n") { it.toString() }
+                    val s = v.filterIsInstance<CharSequence>().joinToString("\n") { it.toString() }
                     if (s.isNotBlank()) return s
                 }
-
                 is CharSequence -> {
                     val s = v.toString()
                     if (s.isNotBlank()) return s
