@@ -7,16 +7,12 @@ import java.util.Date
 import java.util.Locale
 
 object Prefs {
-
     private const val FILE = "wa_auto_prefs"
     private const val KEY_ENABLED = "enabled"
     private const val KEY_LOG = "log"
     private const val KEY_DAY_PREFIX = "day_"
 
-    private fun prefs(ctx: Context) =
-        ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE)
-
-    // ================= APP ENABLED =================
+    private fun prefs(ctx: Context) = ctx.getSharedPreferences(FILE, Context.MODE_PRIVATE)
 
     fun isEnabled(ctx: Context): Boolean =
         prefs(ctx).getBoolean(KEY_ENABLED, false)
@@ -31,8 +27,6 @@ object Prefs {
         return newVal
     }
 
-    // ================= LOG =================
-
     fun clearLog(ctx: Context) {
         prefs(ctx).edit().remove(KEY_LOG).apply()
     }
@@ -44,50 +38,29 @@ object Prefs {
         val sdf = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         val ts = sdf.format(Date())
         val entry = "[$ts] $line"
-
         val cur = readLog(ctx)
-        val newLog =
-            if (TextUtils.isEmpty(cur)) entry
-            else "$cur\n$entry"
-
+        val newLog = if (TextUtils.isEmpty(cur)) entry else "$cur\n$entry"
         prefs(ctx).edit().putString(KEY_LOG, newLog).apply()
     }
 
-    // ================= SCHEDULE POR DIA =================
-
-    private fun keyDayEnabled(dayKey: String) =
-        "${KEY_DAY_PREFIX}${dayKey}_enabled"
-
-    private fun keyDayStart(dayKey: String) =
-        "${KEY_DAY_PREFIX}${dayKey}_start"
-
-    private fun keyDayEnd(dayKey: String) =
-        "${KEY_DAY_PREFIX}${dayKey}_end"
-
     fun isDayEnabled(ctx: Context, dayKey: String): Boolean =
-        prefs(ctx).getBoolean(keyDayEnabled(dayKey), false)
+        prefs(ctx).getBoolean("${KEY_DAY_PREFIX}${dayKey}_enabled", false)
 
     fun setDayEnabled(ctx: Context, dayKey: String, enabled: Boolean) {
-        prefs(ctx).edit()
-            .putBoolean(keyDayEnabled(dayKey), enabled)
-            .apply()
+        prefs(ctx).edit().putBoolean("${KEY_DAY_PREFIX}${dayKey}_enabled", enabled).apply()
     }
 
     fun getDayStart(ctx: Context, dayKey: String): String =
-        prefs(ctx).getString(keyDayStart(dayKey), "") ?: ""
+        prefs(ctx).getString("${KEY_DAY_PREFIX}${dayKey}_start", "") ?: ""
 
     fun setDayStart(ctx: Context, dayKey: String, value: String) {
-        prefs(ctx).edit()
-            .putString(keyDayStart(dayKey), value)
-            .apply()
+        prefs(ctx).edit().putString("${KEY_DAY_PREFIX}${dayKey}_start", value).apply()
     }
 
     fun getDayEnd(ctx: Context, dayKey: String): String =
-        prefs(ctx).getString(keyDayEnd(dayKey), "") ?: ""
+        prefs(ctx).getString("${KEY_DAY_PREFIX}${dayKey}_end", "") ?: ""
 
     fun setDayEnd(ctx: Context, dayKey: String, value: String) {
-        prefs(ctx).edit()
-            .putString(keyDayEnd(dayKey), value)
-            .apply()
+        prefs(ctx).edit().putString("${KEY_DAY_PREFIX}${dayKey}_end", value).apply()
     }
 }
