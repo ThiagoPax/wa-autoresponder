@@ -1,43 +1,43 @@
-+<?xml version="1.0" encoding="utf-8"?>
-+<!-- Day schedule row layout rebuilt to avoid BOM/prolog issues -->
-+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-+    android:layout_width="match_parent"
-+    android:layout_height="wrap_content"
-+    android:orientation="horizontal"
-+    android:gravity="center_vertical"
-+    android:paddingVertical="4dp">
-+
-+    <TextView
-+        android:id="@+id/tvDayName"
-+        android:layout_width="0dp"
-+        android:layout_height="wrap_content"
-+        android:layout_weight="1"
-+        android:text="Seg"
-+        android:textStyle="bold" />
-+
-+    <Switch
-+        android:id="@+id/swDayEnabled"
-+        android:layout_width="wrap_content"
-+        android:layout_height="wrap_content"
-+        android:text="" />
-+
-+    <EditText
-+        android:id="@+id/etStart"
-+        android:layout_width="0dp"
-+        android:layout_height="wrap_content"
-+        android:layout_marginStart="8dp"
-+        android:layout_weight="1"
-+        android:ems="4"
-+        android:hint="Início"
-+        android:inputType="time" />
-+
-+    <EditText
-+        android:id="@+id/etEnd"
-+        android:layout_width="0dp"
-+        android:layout_height="wrap_content"
-+        android:layout_marginStart="8dp"
-+        android:layout_weight="1"
-+        android:ems="4"
-+        android:hint="Fim"
-+        android:inputType="time" />
-+</LinearLayout>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Day schedule row layout rebuilt to avoid BOM/prolog issues -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingVertical="4dp">
+
+    <TextView
+        android:id="@+id/tvDayName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Seg"
+        android:textStyle="bold" />
+
+    <Switch
+        android:id="@+id/swDayEnabled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/etStart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:ems="4"
+        android:hint="Início"
+        android:inputType="time" />
+
+    <EditText
+        android:id="@+id/etEnd"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:ems="4"
+        android:hint="Fim"
+        android:inputType="time" />
+
+</LinearLayout>
