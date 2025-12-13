@@ -1,9 +1,3 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/app/src/main/java/com/seuapp/whatsautoresponder/service/WANotificationListener.kt b/app/src/main/java/com/seuapp/whatsautoresponder/service/WANotificationListener.kt
-index bb44d146d82f1ce024ab230ce8c3aed4c39ec1b9..e95fc8a3b98198ea34da2b3b22533fa7ac60c5f9 100644
---- a/app/src/main/java/com/seuapp/whatsautoresponder/service/WANotificationListener.kt
-+++ b/app/src/main/java/com/seuapp/whatsautoresponder/service/WANotificationListener.kt
-@@ -1,114 +1,96 @@
  package com.seuapp.whatsautoresponder.service
  
  import android.app.Notification
@@ -139,6 +133,3 @@ index bb44d146d82f1ce024ab230ce8c3aed4c39ec1b9..e95fc8a3b98198ea34da2b3b22533fa7
          return ""
      }
  }
- 
-EOF
-)
