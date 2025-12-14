@@ -13,13 +13,13 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import com.seuapp.whatsautoresponder.R
 import com.seuapp.whatsautoresponder.util.LogBus
 import com.seuapp.whatsautoresponder.util.Prefs
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     private data class DayConfig(val key: String, val label: String)
 
