@@ -34,12 +34,10 @@ class WANotificationListener : NotificationListenerService() {
 
             val actions = runCatching { sbn.notification?.actions ?: emptyArray() }
                 .getOrDefault(emptyArray())
-
             val hasReply = actions.any {
                 runCatching { (it.title?.toString() ?: "").contains("responder", true) }
                     .getOrDefault(false)
             }
-
             if (hasReply) {
                 Prefs.appendLog(this, "Ação de resposta disponível (apenas log).")
                 LogBus.emit("Ação de resposta disponível (apenas log).")
