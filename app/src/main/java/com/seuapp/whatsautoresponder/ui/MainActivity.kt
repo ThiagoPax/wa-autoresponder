@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -13,13 +14,13 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.core.widget.doAfterTextChanged
 import com.seuapp.whatsautoresponder.R
 import com.seuapp.whatsautoresponder.util.LogBus
 import com.seuapp.whatsautoresponder.util.Prefs
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
 
     private data class DayConfig(val key: String, val label: String)
 
@@ -65,7 +66,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        registerReceiver(logReceiver, IntentFilter(LogBus.ACTION_LOG_UPDATED))
+
+        val filter = IntentFilter(LogBus.ACTION_LOG_UPDATED)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(logReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            @Suppress("DEPRECATION")
+            registerReceiver(logReceiver, filter)
+        }
     }
 
     override fun onPause() {
