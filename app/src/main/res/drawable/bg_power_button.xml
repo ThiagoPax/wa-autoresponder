@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- ON (selected=true) -->
+    <item android:state_selected="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/waGreen"/>
+            <size android:width="200dp" android:height="200dp"/>
+            <stroke android:width="4dp" android:color="@color/white"/>
+        </shape>
+    </item>
+
+    <!-- OFF -->
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/toggleOff"/>
+            <size android:width="200dp" android:height="200dp"/>
+            <stroke android:width="4dp" android:color="@color/cardDark"/>
+        </shape>
+    </item>
+</selector>
