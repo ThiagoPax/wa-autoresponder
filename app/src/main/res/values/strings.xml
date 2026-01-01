@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Aula de Tênis</string>
+    <string name="monitoring_active">Monitoramento Ativo</string>
+    <string name="monitoring_inactive">Monitoramento Inativo</string>
+    <string name="schedule_title">Horários para Resposta Automática</string>
+    <string name="view_log">Ver Log</string>
+    <string name="log_title">Log de Atividades</string>
+    <string name="clear_log">Limpar Log</string>
+    <string name="back">Voltar</string>
+    <string name="no_logs">Nenhum registro ainda</string>
+    <string name="start_time">Início</string>
+    <string name="end_time">Fim</string>
+    <string name="mon">Segunda</string>
+    <string name="tue">Terça</string>
+    <string name="wed">Quarta</string>
+    <string name="thu">Quinta</string>
+    <string name="fri">Sexta</string>
+    <string name="sat">Sábado</string>
+    <string name="sun">Domingo</string>
+    <string name="notification_permission">Conceder Permissão</string>
+    <string name="permission_required">Permissão de notificações necessária</string>
+</resources>
